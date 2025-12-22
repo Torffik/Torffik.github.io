@@ -1,0 +1,482 @@
+:root {
+    --primary-blue: #1e3a8a;
+    --light-blue: #3b82f6;
+    --lighter-blue: #dbeafe;
+    --white: #ffffff;
+    --light-gray: #f3f4f6;
+    --dark-gray: #4b5563;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--light-gray);
+    color: var(--dark-gray);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header Styles */
+.header {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    background-color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-weight: bold;
+    color: var(--primary-blue);
+}
+
+.header-text h1 {
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+.header-text p {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Navigation */
+.nav {
+    background-color: var(--light-blue);
+    padding: 10px 0;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+}
+
+.nav-item {
+    margin-right: 20px;
+}
+
+.nav-link {
+    color: var(--white);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Main Content */
+.main-content {
+    padding: 30px 0;
+    min-height: calc(100vh - 140px);
+}
+
+.page-title {
+    margin-bottom: 20px;
+    color: var(--primary-blue);
+    border-bottom: 2px solid var(--light-blue);
+    padding-bottom: 10px;
+}
+
+/* Login Page */
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--primary-blue);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--light-blue);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: var(--primary-blue);
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.error-message {
+    color: #ef4444;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Teachers Page - VERTICAL LIST */
+.teachers-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.teacher-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid var(--light-blue);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.teacher-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.teacher-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.teacher-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--primary-blue);
+    flex: 1;
+}
+
+.teacher-position {
+    font-size: 14px;
+    color: var(--dark-gray);
+    background: var(--lighter-blue);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.teacher-info {
+    margin-bottom: 15px;
+}
+
+.teacher-email {
+    font-size: 14px;
+    color: var(--dark-gray);
+}
+
+.teacher-groups {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid var(--lighter-blue);
+}
+
+.groups-count {
+    font-size: 14px;
+    color: var(--dark-gray);
+    font-weight: 500;
+}
+
+.teacher-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.view-groups-btn {
+    background-color: var(--light-blue);
+    color: var(--white);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.view-groups-btn:hover {
+    background-color: var(--primary-blue);
+}
+
+.delete-teacher-btn {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.delete-teacher-btn:hover {
+    background-color: #dc2626;
+}
+
+/* Groups Management Page */
+.teacher-selector {
+    margin-bottom: 20px;
+}
+
+.teacher-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: var(--white);
+    max-width: 400px;
+}
+
+.groups-management {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.groups-section {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+    margin-bottom: 15px;
+    color: var(--primary-blue);
+    border-bottom: 1px solid var(--lighter-blue);
+    padding-bottom: 10px;
+}
+
+.groups-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid var(--lighter-blue);
+    transition: background-color 0.2s;
+}
+
+.group-item:hover {
+    background-color: var(--lighter-blue);
+}
+
+.group-name {
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.action-btn {
+    background-color: var(--light-blue);
+    color: var(--white);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s;
+}
+
+.action-btn:hover {
+    background-color: var(--primary-blue);
+}
+
+.action-btn.remove {
+    background-color: #ef4444;
+}
+
+.action-btn.remove:hover {
+    background-color: #dc2626;
+}
+
+.no-data {
+    text-align: center;
+    padding: 30px;
+    color: var(--dark-gray);
+    font-style: italic;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: var(--dark-gray);
+    font-size: 16px;
+}
+
+/* Модальное окно */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    padding: 0;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--lighter-blue);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--primary-blue);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--dark-gray);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    color: var(--primary-blue);
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--lighter-blue);
+}
+
+/* Кнопки */
+.btn-secondary {
+    background-color: #6b7280;
+}
+
+.btn-secondary:hover {
+    background-color: #4b5563;
+}
+
+.btn-primary {
+    background-color: var(--light-blue);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-blue);
+}
+
+@media (max-width: 768px) {
+    .groups-management {
+        grid-template-columns: 1fr;
+    }
+
+    .teacher-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .teacher-groups {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .teacher-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+    }
+}
