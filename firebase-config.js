@@ -48,6 +48,7 @@ class FirebaseService {
                 name: teacherData.name,
                 position: teacherData.position,
                 email: teacherData.email,
+                password: teacherData.password,
                 groupCount: teacherData.groupCount || 0
             });
             return teacherData.id;
@@ -193,21 +194,24 @@ async function initializeDefaultData() {
                     name: 'Иванова Мария Петровна',
                     position: 'Старший преподаватель',
                     email: 'ivanova.mp@ugntu.ru',
-                    groupCount: 3
+                    groupCount: 3,
+                    password: '-'
                 },
                 {
                     id: '2',
                     name: 'Петров Алексей Владимирович',
                     position: 'Доцент',
                     email: 'petrov.av@ugntu.ru',
-                    groupCount: 2
+                    groupCount: 2,
+                    password: '-'
                 },
                 {
                     id: '3',
                     name: 'Сидорова Елена Ивановна',
                     position: 'Профессор',
                     email: 'sidorova.ei@ugntu.ru',
-                    groupCount: 4
+                    groupCount: 4,
+                    password: '-'
                 }
             ];
 
