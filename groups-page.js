@@ -3,7 +3,7 @@ class GroupsManagementPage {
     constructor(selectedTeacherId = null) {
         console.log('=== NEW GroupsManagementPage CREATED ===');
         console.log('Initial teacherId:', selectedTeacherId);
-        
+
         this.selectedTeacher = selectedTeacherId;
         this.teachers = [];
         this.allGroups = [];
@@ -46,7 +46,14 @@ class GroupsManagementPage {
         try {
             const teacherGroupsData = await FirebaseService.getTeacherGroups(this.selectedTeacher);
             const groupIds = Object.keys(teacherGroupsData);
-            this.teacherGroups = this.allGroups.filter(group => groupIds.includes(group.id));
+
+
+            const groupIdsStr = groupIds.map(id => String(id));
+
+            this.teacherGroups = this.allGroups.filter(group => {
+                        const groupIdStr = String(group.id);
+                        return groupIdsStr.includes(groupIdStr);
+                    });
         } catch (error) {
             console.error('Error loading teacher groups:', error);
             this.teacherGroups = [];
@@ -254,7 +261,7 @@ class GroupsManagementPage {
         // Загружаем данные и рендерим контент
         await this.loadData();
         this.renderContent();
-        
+
         return this.container;
     }
 }

@@ -21,122 +21,77 @@ const TEACHERS_COLLECTION = 'teachers';
 const GROUPS_COLLECTION = 'groups';
 const TEACHER_GROUPS_COLLECTION = 'teacher_groups';
 
-// Firebase service class
+// Firebase service class - УПРОЩЕННАЯ ВЕРСИЯ
 class FirebaseService {
-    // Teachers methods
-    static async getTeachers() {
-        try {
-            const snapshot = await database.ref(TEACHERS_COLLECTION).once('value');
-            if (snapshot.exists()) {
-                const teachers = snapshot.val();
-                return Object.keys(teachers).map(key => ({
-                    id: key,
-                    ...teachers[key]
-                }));
-            }
-            return [];
-        } catch (error) {
-            console.error('Error getting teachers:', error);
-            throw error;
-        }
-    }
-
     static async addTeacher(teacherData) {
-        try {
-            const teacherRef = database.ref(`${TEACHERS_COLLECTION}/${teacherData.id}`);
-            await teacherRef.set({
-                name: teacherData.name,
-                position: teacherData.position,
-                email: teacherData.email,
-                password: teacherData.password,
-                groupCount: teacherData.groupCount || 0
-            });
-            return teacherData.id;
-        } catch (error) {
-            console.error('Error adding teacher:', error);
-            throw error;
+            try {
+                const teacherRef = database.ref(`${TEACHERS_COLLECTION}/${teacherData.id}`);
+                await teacherRef.set({
+                    name: teacherData.name,
+                    position: teacherData.position,
+                    email: teacherData.email,
+                    password: teacherData.password,
+                    groupCount: teacherData.groupCount || 0
+                });
+                return teacherData.id;
+            } catch (error) {
+                console.error('Error adding teacher:', error);
+                throw error;
+            }
         }
-    }
 
     static async updateTeacher(teacherId, teacherData) {
-        try {
-            const teacherRef = database.ref(`${TEACHERS_COLLECTION}/${teacherId}`);
-            await teacherRef.update(teacherData);
-        } catch (error) {
-            console.error('Error updating teacher:', error);
-            throw error;
+            try {
+                const teacherRef = database.ref(`${TEACHERS_COLLECTION}/${teacherId}`);
+                await teacherRef.update(teacherData);
+            } catch (error) {
+                console.error('Error updating teacher:', error);
+                throw error;
+            }
         }
-    }
 
     static async deleteTeacher(teacherId) {
-        try {
-            const teacherRef = database.ref(`${TEACHERS_COLLECTION}/${teacherId}`);
-            await teacherRef.remove();
-        } catch (error) {
-            console.error('Error deleting teacher:', error);
-            throw error;
-        }
-    }
-
-    // Groups methods
-    static async getGroups() {
-        try {
-            const snapshot = await database.ref(GROUPS_COLLECTION).once('value');
-            if (snapshot.exists()) {
-                const groups = snapshot.val();
-                return Object.keys(groups).map(key => ({
-                    id: key,
-                    ...groups[key]
-                }));
+            try {
+                const teacherRef = database.ref(`${TEACHERS_COLLECTION}/${teacherId}`);
+                await teacherRef.remove();
+            } catch (error) {
+                console.error('Error deleting teacher:', error);
+                throw error;
             }
-            return [];
-        } catch (error) {
-            console.error('Error getting groups:', error);
-            throw error;
         }
-    }
+    // === Основные методы для работы с teacher_groups ===
 
-    static async addGroup(groupData) {
-        try {
-            const groupRef = database.ref(`${GROUPS_COLLECTION}/${groupData.id}`);
-            await groupRef.set({
-                name: groupData.name,
-                students: groupData.students || 0
-            });
-            return groupData.id;
-        } catch (error) {
-            console.error('Error adding group:', error);
-            throw error;
-        }
-    }
-
-    // Teacher-Groups relationship methods
     static async getTeacherGroups(teacherId) {
         try {
+            console.log(`Getting teacher_groups for teacher ${teacherId}...`);
             const snapshot = await database.ref(`${TEACHER_GROUPS_COLLECTION}/${teacherId}`).once('value');
-            if (snapshot.exists()) {
-                return snapshot.val();
+
+            if (!snapshot.exists()) {
+                console.log(`No teacher_groups found for teacher ${teacherId}`);
+                return {};
             }
-            return {};
+
+            const teacherGroupsData = snapshot.val();
+            console.log(`Raw teacher_groups data:`, teacherGroupsData);
+
+            // ПРОСТО возвращаем объект как есть
+            return teacherGroupsData || {};
+
         } catch (error) {
             console.error('Error getting teacher groups:', error);
-            throw error;
+            return {};
         }
     }
 
     static async addGroupToTeacher(teacherId, groupId) {
         try {
-            const teacherGroupRef = database.ref(`${TEACHER_GROUPS_COLLECTION}/${teacherId}/${groupId}`);
-            await teacherGroupRef.set(true);
+            console.log(`Writing to teacher_groups/${teacherId}/${groupId} = true`);
 
-            // Update teacher's group count
-            const teacher = await this.getTeacher(teacherId);
-            if (teacher) {
-                await this.updateTeacher(teacherId, {
-                    ...teacher,
-                    groupCount: (teacher.groupCount || 0) + 1
-                });
-            }
+            // ПРЯМАЯ ЗАПИСЬ В teacher_groups
+            await database.ref(`${TEACHER_GROUPS_COLLECTION}/${teacherId}/${groupId}`).set(true);
+
+            console.log(`Successfully added group ${groupId} to teacher ${teacherId} in teacher_groups`);
+
         } catch (error) {
             console.error('Error adding group to teacher:', error);
             throw error;
@@ -145,22 +100,83 @@ class FirebaseService {
 
     static async removeGroupFromTeacher(teacherId, groupId) {
         try {
-            const teacherGroupRef = database.ref(`${TEACHER_GROUPS_COLLECTION}/${teacherId}/${groupId}`);
-            await teacherGroupRef.remove();
+            console.log(`Removing from teacher_groups/${teacherId}/${groupId}`);
 
-            // Update teacher's group count
-            const teacher = await this.getTeacher(teacherId);
-            if (teacher) {
-                await this.updateTeacher(teacherId, {
-                    ...teacher,
-                    groupCount: Math.max(0, (teacher.groupCount || 0) - 1)
-                });
-            }
+            // ПРЯМОЕ УДАЛЕНИЕ ИЗ teacher_groups
+            await database.ref(`${TEACHER_GROUPS_COLLECTION}/${teacherId}/${groupId}`).remove();
+
+            console.log(`Successfully removed group ${groupId} from teacher ${teacherId} in teacher_groups`);
+
         } catch (error) {
             console.error('Error removing group from teacher:', error);
             throw error;
         }
     }
+
+    // === Методы для преподавателей ===
+
+    static async getTeachers() {
+        try {
+            const snapshot = await database.ref(TEACHERS_COLLECTION).once('value');
+            if (snapshot.exists()) {
+                const teachers = snapshot.val();
+                // Преобразуем объект в массив
+                return Object.keys(teachers)
+                    .map(key => ({
+                        id: key,
+                        ...teachers[key]
+                    }))
+                    .filter(teacher => teacher.name); // Фильтруем пустые
+            }
+            return [];
+        } catch (error) {
+            console.error('Error getting teachers:', error);
+            throw error;
+        }
+    }
+
+    // === Методы для групп ===
+
+    static async getGroups() {
+        try {
+            const snapshot = await database.ref(GROUPS_COLLECTION).once('value');
+            if (snapshot.exists()) {
+                const groupsData = snapshot.val();
+
+                // ВАЖНО: Обрабатываем разные форматы данных
+                console.log('PENIS');
+                // Если это массив (как в вашем JSON)
+                if (Array.isArray(groupsData)) {
+                    console.log('ARRAY PENIS');
+                    return groupsData
+                        .filter((group, index) => group !== null && group.name)
+                        .map((group, index) => ({
+                            id: index.toString(), // Используем индекс как ID
+                            ...group
+                        }));
+                }
+
+                // Если это объект
+                if (typeof groupsData === 'object') {
+                console.log('OBJECT PENIS');
+                    return Object.keys(groupsData)
+                        .map(key => ({
+                            id: key,
+                            ...groupsData[key]
+                        }))
+                        .filter(group => group.name);
+                }
+
+                return [];
+            }
+            return [];
+        } catch (error) {
+            console.error('Error getting groups:', error);
+            throw error;
+        }
+    }
+
+    // === Вспомогательные методы ===
 
     static async getTeacher(teacherId) {
         try {
@@ -177,88 +193,17 @@ class FirebaseService {
             throw error;
         }
     }
+
+    // === Метод для проверки структуры данных ===
+
+
 }
 
-// Initialize default data if database is empty
-async function initializeDefaultData() {
-    try {
-        const teachers = await FirebaseService.getTeachers();
-        const groups = await FirebaseService.getGroups();
-
-        if (teachers.length === 0) {
-            console.log('Initializing default teachers...');
-            // Add default teachers
-            const defaultTeachers = [
-                {
-                    id: '1',
-                    name: 'Иванова Мария Петровна',
-                    position: 'Старший преподаватель',
-                    email: 'ivanova.mp@ugntu.ru',
-                    groupCount: 3,
-                    password: '-'
-                },
-                {
-                    id: '2',
-                    name: 'Петров Алексей Владимирович',
-                    position: 'Доцент',
-                    email: 'petrov.av@ugntu.ru',
-                    groupCount: 2,
-                    password: '-'
-                },
-                {
-                    id: '3',
-                    name: 'Сидорова Елена Ивановна',
-                    position: 'Профессор',
-                    email: 'sidorova.ei@ugntu.ru',
-                    groupCount: 4,
-                    password: '-'
-                }
-            ];
-
-            for (const teacher of defaultTeachers) {
-                await FirebaseService.addTeacher(teacher);
-            }
-        }
-
-        if (groups.length === 0) {
-            console.log('Initializing default groups...');
-            // Add default groups
-            const defaultGroups = [
-                { id: '1', name: 'ИЯ-101', students: 25 },
-                { id: '2', name: 'ИЯ-102', students: 28 },
-                { id: '3', name: 'ИЯ-201', students: 22 },
-                { id: '4', name: 'ИЯ-202', students: 24 },
-                { id: '5', name: 'ИЯ-301', students: 26 },
-                { id: '6', name: 'ИЯ-302', students: 23 },
-                { id: '7', name: 'ИЯ-401', students: 27 },
-                { id: '8', name: 'ИЯ-402', students: 25 },
-                { id: '9', name: 'ИЯ-501', students: 20 },
-                { id: '10', name: 'ИЯ-502', students: 22 }
-            ];
-
-            for (const group of defaultGroups) {
-                await FirebaseService.addGroup(group);
-            }
-
-            // Set up default teacher-group relationships
-            const defaultRelationships = {
-                '1': ['1', '3', '5'],  // Иванова
-                '2': ['2', '4', '6'],  // Петров
-                '3': ['7', '8', '9', '10']  // Сидорова
-            };
-
-            for (const [teacherId, groupIds] of Object.entries(defaultRelationships)) {
-                for (const groupId of groupIds) {
-                    await FirebaseService.addGroupToTeacher(teacherId, groupId);
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error initializing default data:', error);
-    }
-}
-
-// Initialize default data when the page loads
+// Инициализация при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
-    initializeDefaultData();
+    console.log('=== PAGE LOADED ===');
+
+    // Если нужно, можно сразу создать страницу
+    // const page = new GroupsManagementPage();
+    // document.body.appendChild(await page.render());
 });
